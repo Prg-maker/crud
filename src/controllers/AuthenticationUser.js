@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 
 
 module.exports = {
-  async login(req , res){
+  async login(req , res ){
     
     const {name , email , password } = req.body
     const db = await Database()
@@ -13,17 +13,17 @@ module.exports = {
 
 
     try{
-      const  data = await db.get(`SELECT * FROM user WHERE name LIKE '${name}'  AND password = ${password}`)
+      const  data = await db.get(`SELECT * FROM user WHERE name LIKE '${name}'  AND password = ${password} AND email = '${email}'`)
       await db.close()
 
       const id = data.id
 
       const token = jwt.sign({id}, process.env.SECRET , {
-        expiresIn: 300
+        expiresIn: 30000
       },)
 
-
-      return res.json({  id ,auth: name, email , password,  token: token });
+      
+      return res.json({  id , name, email , password,  token: token });
 
 
     }catch(err){
@@ -32,7 +32,10 @@ module.exports = {
     
   },
   logout(req , res){
-    res.json({auth:false , token: null})
+    const {name , token , password } = req.body
+
+
+    res.json({name:false , token: null , password: null})
   }
 
 

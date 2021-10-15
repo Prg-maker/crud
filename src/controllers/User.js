@@ -1,5 +1,5 @@
 module.exports = {
   user(req , res){
-    res.send('ok')
+    const  {name , email , password } = req.body
   }
 }
